@@ -1,5 +1,7 @@
 package mustache
 
+//go:generate go-bindata -pkg=mustache -prefix=tests -o bindata_test.go tests
+
 import (
 	"errors"
 	"os"
@@ -204,6 +206,15 @@ func TestPartial(t *testing.T) {
 	}
 }
 
+func TestPartialFS(t *testing.T) {
+	test3, _ := Asset("test3.mustache")
+	out := RenderStringFS(string(test3), ReadFileFunc(Asset), map[string]interface{}{"users": []User{{Name: "Alan"}, {Name: "Turing"}}})
+	expected := "Hi Alan\nHi Turing\n"
+	if out != expected {
+		t.Errorf("RenderStringFS(%#v) == %#v, want %#v", string(test3), out, expected)
+	}
+}
+
 /*
 func TestSectionPartial(t *testing.T) {
     filename := path.Join(path.Join(os.Getenv("PWD"), "tests"), "test3.mustache")
@@ -280,7 +291,7 @@ func TestFSLookup(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		fs := ReadFileFunc(func(dir, templatePath string) ([]byte, error) {
+		fs := ReadFileFunc(func(templatePath string) ([]byte, error) {
 			tmpl, ok := test.partials[templatePath]
 			if !ok {
 				return nil, errors.New("no partial " + templatePath)

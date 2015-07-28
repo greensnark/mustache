@@ -31,13 +31,13 @@ type sectionElement struct {
 }
 
 type Filesystem interface {
-	ReadFile(dir, path string) ([]byte, error)
+	ReadFile(path string) ([]byte, error)
 }
 
-type ReadFileFunc func(dir, path string) ([]byte, error)
+type ReadFileFunc func(path string) ([]byte, error)
 
-func (d ReadFileFunc) ReadFile(dir, path string) ([]byte, error) {
-	return d(dir, path)
+func (d ReadFileFunc) ReadFile(path string) ([]byte, error) {
+	return d(path)
 }
 
 type Template struct {
@@ -115,7 +115,7 @@ func (tmpl *Template) parsePartial(name string) (*Template, error) {
 		name + ".stache",
 	}
 	for _, name := range filenames {
-		bytes, err := tmpl.ReadFile(tmpl.dir, name)
+		bytes, err := tmpl.ReadFile(filepath.Join(tmpl.dir, name))
 		if err != nil {
 			continue
 		}
@@ -616,8 +616,8 @@ func RenderFileInLayout(filename string, layoutFile string, context ...interface
 	return tmpl.RenderInLayout(layoutTmpl, context...)
 }
 
-func directFSReadFile(dir, path string) ([]byte, error) {
-	return ioutil.ReadFile(filepath.Join(dir, path))
+func directFSReadFile(path string) ([]byte, error) {
+	return ioutil.ReadFile(path)
 }
 
 // DirectFS is the default Filesystem instance: it reads files relative to the

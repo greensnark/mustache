@@ -109,4 +109,7 @@ It'll be blank. You either have to use `&Person{"John", "Smith"}`, or call `Name
 * Sections (boolean, enumerable, and inverted)
 * Partials
 
+## Integrating with go-bindata
 
+Pass in `mustache.ReadFileFunc(Assets)` as your filesystem interface to load
+partials from a go-bindata Assets function.
