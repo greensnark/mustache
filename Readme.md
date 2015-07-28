@@ -112,4 +112,5 @@ It'll be blank. You either have to use `&Person{"John", "Smith"}`, or call `Name
 ## Integrating with go-bindata
 
 Pass in `mustache.ReadFileFunc(Assets)` as your filesystem interface to load
-partials from a go-bindata Assets function.
+partials from a [go-bindata](https://github.com/jteeuwen/go-bindata) Assets
+function.
